@@ -1,8 +1,8 @@
-# Your Name Here
+# Edmon Huang
 # UWYO COSC 1010
-# Submission Date
-# Lab XX
-# Lab Section:
+# Submission Date: 11/12/2024
+# Lab 09
+# Lab Section: 11
 # Sources, people worked with, help given to:
 # Your
 # Comments
@@ -103,3 +103,100 @@ Your total price is $12.9
 
 Would you like to place an order? exit to exit
 """
+
+class Pizza:
+    def __init__(self, size, sauce = "red"): # constructor for Pizza class
+        self.size = size if size >= 10 else 10 # makes sure size is at least 10
+        self.sauce = sauce # initializes the sauce attribute 
+        self.toppings = ["cheese"] # initializes the toppings list with cheese
+
+    def getSize(self): # returns size attribute
+        return self.size 
+    
+    def setSize(self, size): # sets size attribute 
+        if size >= 10: # must be greater than or equal to 10
+            self.size = size # sets size if greater than 10
+        else:
+            self.size = 10 # if less than 10 sets to 10
+    
+    def getSauce(self):
+        return self.sauce # returns sauce attribute
+
+    def getToppings(self):
+        return self.toppings # returns toppings list 
+    
+    def setToppings(self, *new_toppings): # Defines method allowing multiple toppings to be added
+        for topping in new_toppings: # Loops through each topping in new_toppings
+            self.toppings.append(topping) # appends each topping to the list
+    
+    def getAmountOfToppings(self):
+        return len(self.toppings) # returns the length of toppings list
+    
+class Pizzeria: # Pizza class
+    price_per_topping = 0.30
+    price_per_inch = 0.60
+
+    def __init__(self): # Constructor for Pizzeria Class 
+        self.orders = 0 # Tracks orders placed
+        self.pizzas = [] # Initializes pizza list
+    
+    def placeOrder(self): # Defines method to store orders
+        self.orders += 1 # Increments orders
+        size = int(input("Please enter the size of the pizza as a whole number (smallest is 10): "))
+        sauce = input("What kind of sauce would you like?\nLeave blank for red sauce: ").strip()
+        if not sauce: # if empty string, sauce is red
+            sauce = "red"
+        
+        pizza = Pizza(size, sauce) # Creates object using size and sauce
+
+        print("Please enter toppings you would like, leave blank and enter when done.")
+        while True: # Repeated prompts topping input
+            topping = input()
+            if topping == "":
+                break
+            pizza.setToppings(topping) # adds topping to pizza object's topping list
+
+        self.pizzas.append(pizza) # adds pizza to pizza list
+
+    def getPrice(self): 
+        pizza = self.pizzas[-1] # Gets most recent pizza added to list
+        base_price = pizza.getSize() * self.price_per_inch # gets base price of pizza
+        topping_price = (pizza.getAmountOfToppings() - 1) * self.price_per_topping  # gets topping price minus one to exclude cheese
+        total_price = base_price + topping_price
+        return base_price, topping_price, total_price # Returns all three prices
+    
+    def getReceipt(self): 
+        pizza = self.pizzas[-1] # Gets most recent pizza
+        base_price, topping_price, total_price = self.getPrice() # Gets prices from getPrice()
+
+        print(f"\nYou ordered a {pizza.getSize()}\" pizza with {pizza.getSauce()} sauce and the following toppings:")
+        for topping in pizza.getToppings():
+            print(f"    {topping}")
+        print(f"\nYou ordered a {pizza.getSize()}\" pizza for ${base_price:.2f}")
+        print(f"You had {pizza.getAmountOfToppings() - 1} topping(s) for ${topping_price:.2f}")
+        print(f"Your total price is ${total_price:.2f}")
+
+    def getNumberOfOrders(self):
+        return self.orders
+
+# Main program logic
+pizzeria = Pizzeria()
+
+while True:
+    order_prompt = input("Would you like to place an order? Type 'exit' to quit: ").strip().lower()
+    if order_prompt == "exit":
+        break
+    pizzeria.placeOrder()
+    pizzeria.getReceipt()
+
+print(f"\nTotal number of orders placed: {pizzeria.getNumberOfOrders()}")
+
+
+
+
+
+
+
+
+            
+
